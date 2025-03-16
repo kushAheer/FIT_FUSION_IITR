@@ -4,7 +4,12 @@ import { Icon } from "react-native-paper";
 import { GlobalStyles } from "../constants/color";
 import NutritionScreen from "./NutritionScreen";
 import HomeScreen from "./HomeScreen";
+import ScheduleScreen from "./ScheduleScreen";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { ScheduleNestedNavigation } from "./StackNestedNavigation";
+
 const Tab = createBottomTabNavigator();
+
 
 function BottomNavigation() {
 	return (
@@ -32,7 +37,8 @@ function BottomNavigation() {
 				options={() => ({
 					tabBarLabel: "Home",
 					tabBarIcon: ({ color }) => (
-						<Icon source="home" color={color} size={26} />
+						// <Icon source="home" color={color} size={26} />
+						<Ionicons name="home-outline" color={color} size={26} />
 					),
 				})}
 			/>
@@ -42,17 +48,18 @@ function BottomNavigation() {
 				options={() => ({
 					tabBarLabel: "Compass",
 					tabBarIcon: ({ color }) => (
-						<Icon source="compass" color={color} size={26} />
+						<Icon source="compass-outline" color={color} size={26} />
 					),
 				})}
 			/>
 			<Tab.Screen
-				name="Add"
-				component={HomeScreen}
+				name="Schedule"
+				component={ScheduleNestedNavigation}
 				options={() => ({
-					tabBarLabel: "Add",
+					tabBarLabel: "Schedule",
 					tabBarIcon: ({ color }) => (
-						<Icon source="plus" color={color} size={26} />
+						// <Icon source="plus" color={color} size={26} />
+						<Ionicons name="add-circle-outline" color={color} size={26} />
 					),
 				})}
 			/>
@@ -62,7 +69,7 @@ function BottomNavigation() {
 				options={() => ({
 					tabBarLabel: "Nutrition",
 					tabBarIcon: ({ color }) => (
-						<Icon source="food-apple" color={color} size={26} />
+						<Icon source="food-apple-outline" color={color} size={26} />
 					),
 				})}
 			/>
@@ -72,7 +79,8 @@ function BottomNavigation() {
 				options={() => ({
 					tabBarLabel: "Analytics",
 					tabBarIcon: ({ color }) => (
-						<Icon source="chart-bar" color={color} size={26} />
+						// <Icon source="chart-bar" color={color} size={26} />
+						<Ionicons name="trending-up" color={color} size={26} />
 					),
 				})}
 			/>

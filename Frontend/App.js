@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import BottomNavigation from "./screens/BottomNavigation";
 import { GlobalStyles } from "./constants/color";
+import ScheduleDetailScreen from "./screens/ScheduleDetailScreen";
 
 const Stack = createStackNavigator();
 
@@ -12,8 +13,9 @@ export default function App() {
 	return (
 		<>
 			<StatusBar style="auto" />
-			<NavigationContainer > 
+			<NavigationContainer>
 				<Stack.Navigator
+					initialRouteName="BottomNavigation"
 				>
 					<Stack.Screen
 						name="BottomNavigation"
@@ -22,6 +24,7 @@ export default function App() {
 							headerShown: false,
 						}}
 					/>
+					
 				</Stack.Navigator>
 			</NavigationContainer>
 		</>
