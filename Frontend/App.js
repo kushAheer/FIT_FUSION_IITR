@@ -6,6 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import BottomNavigation from "./screens/BottomNavigation";
 import { GlobalStyles } from "./constants/color";
 import ScheduleDetailScreen from "./screens/ScheduleDetailScreen";
+import LoginScreen from './screens/LoginScreen';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,11 @@ export default function App() {
 						options={{
 							headerShown: false,
 						}}
+					/>
+					<Stack.Screen
+						name = "Login"
+						component={LoginScreen}
+						options={{ headerShown: false }}
 					/>
 					
 				</Stack.Navigator>

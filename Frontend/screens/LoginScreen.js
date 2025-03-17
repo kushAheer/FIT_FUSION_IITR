@@ -1,0 +1,117 @@
+import React, { useState, usestate } from "react";
+import { view, Text, TextInput , TouchableOpacity, StyleSheet, StatusBar} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons';
+
+const LoginScreen = () => {
+    const [email, setEmail] = useState('');
+    const [password, confirmpassword] = useState('');
+    const navigation = useNavigation();
+
+    const loginlogic = () => {
+        //logic of login will be here this is temp for some time to return back to
+        // once decided how we will handle multiple usernames it will be added 
+        navigation.navigate('HomeScreen');
+    };
+    return (
+        <View style = {styles.container}>
+            <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+            <TouchableOpacity
+                style={styles.backButton}
+                onPress={()=> navigation.goback()}
+            >
+                <Icon name = "arrow-back" size={24} color = '#000'  />
+            </TouchableOpacity>
+            <View style={styles.content}>
+                <Text style={styles.loginHeader}>Login</Text>
+                <TextInput
+                    style = {styles.input}
+                    username = "Enter Email or Username"
+                    usernametextcolor = "#888"
+                    autoCapitalize="none"
+                    value={email}
+                    onChangeText={setEmail}
+                />
+                <TextInput
+                    style = {styles.input}
+                    pass = "password"
+                    passtextcolor="#888"
+                    secureTextEntry
+                    value={password}
+                    onChangeText={confirmpassword}
+                /> 
+                <View style={styles.forgotpasscontainer}>
+                    <Text style={forgotpasstext}>Forgot Password</Text>
+                    <TouchableOpacity onPress={()=> navigation.navigate("forgot password")}>
+                        <Text style= {styles.forgotpasslink}>Forgot Password?</Text>
+                    </TouchableOpacity>
+                </View>
+                <TouchableOpacity>
+                    <Text style = {styles.loginBotton}>LOGIN</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    content: {                   
+        flex: 1,
+        justifyContent: 'center',
+        paddingHorizontal: 30,
+    },
+    loginHeader: {
+        fontSize: 28,
+        fontWeight: "bold",
+        color: '#000',
+        marginBottom: 40,
+        textAlign: 'center',
+    },
+    input: {
+        height: 50,
+        borderBottomWidth: 1,
+        borderColor: '#ddd',
+        marginBottom: 30,
+        fontSize: 16,
+        paddingVertical: 10,
+    },
+    forgotpasscontainer: {
+        marginTop: 20,
+        alignItems: 'center',
+
+    },
+    forgotpasstext: {
+        fontSize: 16,
+        color: '#666',
+        marginBottom: 10,
+    },
+    forgotpasslink: {
+        color: '#007bff',
+        fontSize: 16,
+        fontWeight: '500',
+    },
+    loginBotton: {
+        backgroundColor: '#007bff',
+        padding: 16,
+        borderRadius: 8,
+        marginTop: 40,
+        alignItems: 'center',
+    },
+    loginBottontext: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    backButton: {
+        position: 'absolute',
+        top: 50,
+        left: 20,
+        zIndex: 1,
+      },
+});
+
+export default LoginScreen;
