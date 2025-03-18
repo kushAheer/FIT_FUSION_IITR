@@ -7,7 +7,7 @@ const LoginScreen = () => {
     const [email, setEmail] = useState('');
     const [password, confirmpassword] = useState('');
     const navigation = useNavigation();
-
+ 
     const loginlogic = () => {
         //logic of login will be here this is temp for some time to return back to
         // once decided how we will handle multiple usernames it will be added 
