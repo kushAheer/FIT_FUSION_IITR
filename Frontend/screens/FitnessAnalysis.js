@@ -1,176 +1,325 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { accelerometer, gyroscope, setUpdateIntervalForType, SensorTypes } from 'react-native-sensors';import { Pedometer } from 'expo-sensors';
-import { Pedometer } from 'expo-sensors';
+import React from "react";
+import {
+	SafeAreaView,
+	View,
+	Text,
+	StyleSheet,
+	TouchableOpacity,
+	Image,
+} from "react-native";
+import { LineChart } from "react-native-chart-kit";
+import { FlatList } from "react-native-gesture-handler";
+import { Svg, Path } from "react-native-svg";
 
-function FitnessActivity(){
-    const [currentActivity, setCurrentActivity] = useState('Running');
-    const [duration, setDuration] = useState(0);
-    const [calories, setCalories] = useState(0);
-    const [distance, setDistance] = useState(0);
-    const [steps, setSteps] = useState(0);
-    const [activities, setActivities] = useState([]);
-    const [isTracking, setIsTracking] = useState(false);
-    useEffect(() => {
-        setUpdateIntervalForType(SensorTypes.accelerometer, 1000);
+const FitnessActivity = () => {
+	// Sample data for the line chart
+	const data = {
+		labels: ["", "", "", "", "", ""],
+		datasets: [
+			{
+				data: [10, 25, 15, 30, 10, 35],
+				color: (opacity = 1) => `rgba(231, 76, 60, ${opacity})`,
+				strokeWidth: 2,
+			},
+		],
+	};
+
+	// Sample workout data
+	const workouts = [
+		{
+			id: 1,
+			time: "01:23:45",
+			calories: 160,
+			distance: 3.5,
+			color: "#E6F0FF",
+		},
+		{
+			id: 2,
+			time: "01:23:45",
+			calories: 160,
+			distance: 3.5,
+			color: "#FFDDDD",
+		},
+		{
+			id: 3,
+			time: "01:23:45",
+			calories: 160,
+			distance: 3.5,
+			color: "#E3FFE3",
+		},
+		{
+			id: 4,
+			time: "01:23:45",
+			calories: 160,
+			distance: 3.5,
+			color: "#E6F0FF",
+		},
+	];
+
+	return (
+		<SafeAreaView style={styles.container}>
+			<View style={styles.header}>
+				<Text style={styles.headerTitle}>Running</Text>
+				<Text style={styles.headerDate}>12 Mar 2025</Text>
+			</View>
+
+			{/* Today's Activity Chart */}
+			<View style={styles.chartContainer}>
+				<View style={styles.chartHeader}>
+					<TouchableOpacity style={styles.todayButton}>
+						<Text style={styles.todayButtonText}>Today</Text>
+					</TouchableOpacity>
+				</View>
+
+				<LineChart
+					data={data}
+					width={340}
+					height={150}
+					chartConfig={{
+						backgroundColor: "#f0f0f0",
+						backgroundGradientFrom: "#f0f0f0",
+						backgroundGradientTo: "#f0f0f0",
+						decimalPlaces: 0,
+						color: (opacity = 1) => `rgba(231, 76, 60, ${opacity})`,
+						style: {
+							borderRadius: 16,
+						},
+						propsForDots: {
+							r: "0",
+						},
+					}}
+					bezier
+					style={styles.chart}
+					withDots={false}
+					withInnerLines={false}
+					withOuterLines={false}
+					withVerticalLabels={false}
+					withHorizontalLabels={false}
+				/>
+
+				<View style={styles.statsContainer}>
+					<View style={styles.statsItem}>
+						<Text style={styles.statsLabel}>Time</Text>
+						<Text style={styles.statsValue}>01:34:23</Text>
+					</View>
+					<View style={styles.statsItem}>
+						<Text style={styles.statsLabel}>Burning</Text>
+						<Text style={styles.statsValue}>360 Cal</Text>
+					</View>
+				</View>
+			</View>
+
+			{/* Previous Workouts */}
+			{/* {workouts.map(workout => (
         
-        const subscription = accelerometer.subscribe(({ x, y, z }) => {
-          if (isTracking) {
-            // Process data with ML model
-            const activityType = detectActivityType(x, y, z);
-            setCurrentActivity(activityType);
-          }
-        });
+      ))} */}
+			<FlatList
+				data={workouts}
+				renderItem={(workout) => (
+					<View
+						key={workout.item.id}
+						style={[
+							styles.workoutItem,
+							{ backgroundColor: workout.item.color },
+						]}
+					>
+						<View style={styles.workoutInfo}>
+							<View style={styles.workoutType}>
+								
+								<Text style={styles.workoutText}>Running</Text>
+							</View>
+							<Text style={styles.workoutTime}>
+								{workout.item.time}
+							</Text>
+						</View>
+						<View style={styles.workoutStats}>
+							<View style={styles.calorieContainer}>
 
-    return () => subscription.unsubscribe();
-    }, [isTracking]);
+								<Text style={styles.calorieText}>
+									{workout.item.calories} Cal
+								</Text>
+							</View>
+							<Text style={styles.distanceText}>
+								{workout.item.distance} km
+							</Text>
+						</View>
+					</View>
+				)}
+			/>
 
-    useEffect(() => {
-
-        Pedometer.watchStepCount(result => {
-          setSteps(result.steps);
-        });
-    
-    return () => Pedometer.unsubscribe();
-    }, []);
-
-    const detectActivityType = (x, y, z) => {
-        // model logic will here manan
-        // input are taken implement it how ever it can be 
-    };
-    const startTracking = () => {
-        setIsTracking(true);
-        // Reseting metrics here use it if needed or remove it ( for manan )
-        setDuration(0);
-        setCalories(0);
-        setDistance(0);
-      };
-      const stopTracking = () => {
-        setIsTracking(false);
-        // Save session to history
-        setActivities(prev => [{
-          id: Date.now(),
-          type: currentActivity,
-          duration,
-          calories,
-          distance,
-          date: new Date().toLocaleDateString()
-        }, ...prev]);
-    };
-    return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.mainTitle}>Running</Text>
-                <Text style={styles.date}>12 Mar 2025</Text>
-                <Pressable style={styles.dateSelector}>
-                    <Text style={styles.dateSelectorText}>Today ▼</Text>
-                </Pressable>
-            </View>
-            <View style={styles.currentStatsContainer}>
-                <View style={styles.statCard}>
-                    <Text style={styles.statValue}>01:34:23</Text>
-                    <Text style={styles.statLabel}>Time</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statValue}>360 Cal</Text>
-                    <Text style={styles.statLabel}>Burning</Text>
-                </View>
+			{/* Bottom Navigation */}
+			{/* <View style={styles.bottomNav}>
+        <TouchableOpacity style={styles.navItem}>
+          <Image source={require('./assets/home-icon.png')} style={styles.navIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Image source={require('./assets/search-icon.png')} style={styles.navIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <View style={styles.addButton}>
+            <Text style={styles.addButtonText}>+</Text>
           </View>
-            <ScrollView style={styles.historyContainer}>
-                {[1, 2, 3, 4].map((item, index) => (
-                <View key={index} style={styles.activityCard}>
-                    <Text style={styles.activityType}>Running</Text>
-                    {/** this is just text here right data from data base ml to be added her*/}
-                    <View style={styles.activityStats}>
-                        <Text style={styles.activityStat}>01:23:45</Text>
-                        <Text style={styles.activityStat}>160 Cal</Text>
-                        <Text style={styles.activityStat}>3.5 Km</Text>
-                    </View>
-                </View>
-                ))}
-            </ScrollView>
-            <Pressable 
-                style={({ pressed }) => [
-                    styles.controlButton,
-                    pressed && styles.buttonPressed
-                ]}
-                onPress={isTracking ? stopTracking : startTracking}
-            >
-                <Text style={styles.controlButtonText}>
-                    {isTracking ? 'Stop Tracking' : 'Start Tracking'}
-                </Text>
-            </Pressable>
-        </View>
-    );
-}
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Image source={require('./assets/heart-icon.png')} style={styles.navIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Text style={styles.workoutNavText}>Workout</Text>
+        </TouchableOpacity>
+      </View> */}
+		</SafeAreaView>
+	);
+};
 
-export default ActivityScreen;
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      padding: 20,
-    },
-    header: {
-      marginBottom: 30,
-    },
-    activityTitle: {
-      fontSize: 28,
-      fontWeight: 'bold',
-      color: '#000',
-    },
-    date: {
-      fontSize: 16,
-      color: '#666',
-      marginTop: 5,
-    },
-    timeSelector: {
-      fontSize: 16,
-      color: '#007AFF',
-      marginTop: 10,
-    },
-    currentStats: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginBottom: 30,
-    },
-    statBox: {
-      alignItems: 'center',
-    },
-    statValue: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      color: '#000',
-    },
-    statLabel: {
-      fontSize: 16,
-      color: '#666',
-    },
-    history: {
-        flex: 1,
-    },
-    activityItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-      },
-      activityStats: {
-        flexDirection: 'row',
-        gap: 20,
-      },
-      controls: {
-        paddingVertical: 20,
-      },
-      controlButton: {
-        backgroundColor: '#007AFF',
-        padding: 15,
-        borderRadius: 8,
-        alignItems: 'center',
-      },
-      controlButtonText: {
-        color: '#fff',
-        fontWeight: 'bold',
-      },
-    });
+	container: {
+		flex: 1,
+		backgroundColor: "#fff",
+		paddingHorizontal: 16,
+	},
+	header: {
+		paddingTop: 16,
+		paddingBottom: 8,
+	},
+	headerTitle: {
+		fontSize: 16,
+		fontWeight: "400",
+	},
+	headerDate: {
+		fontSize: 20,
+		fontWeight: "600",
+	},
+	chartContainer: {
+		backgroundColor: "#f0f0f0",
+		borderRadius: 16,
+		marginBottom: 16,
+		padding: 12,
+	},
+	chartHeader: {
+		flexDirection: "row",
+		justifyContent: "flex-start",
+		marginBottom: 8,
+	},
+	todayButton: {
+		backgroundColor: "#E74C3C",
+		borderRadius: 16,
+		paddingVertical: 6,
+		paddingHorizontal: 16,
+	},
+	todayButtonText: {
+		color: "white",
+		fontWeight: "500",
+	},
+	chart: {
+		marginVertical: 8,
+		borderRadius: 16,
+	},
+	statsContainer: {
+		flexDirection: "row",
+		borderTopWidth: 1,
+		borderTopColor: "#e0e0e0",
+		paddingTop: 12,
+	},
+	statsItem: {
+		flex: 1,
+		alignItems: "center",
+	},
+	statsLabel: {
+		fontSize: 14,
+		color: "#666",
+	},
+	statsValue: {
+		fontSize: 16,
+		fontWeight: "600",
+		color: "#E74C3C",
+	},
+	workoutItem: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		padding: 16,
+		borderRadius: 12,
+		marginBottom: 12,
+	},
+	workoutInfo: {
+		flexDirection: "column",
+	},
+	workoutType: {
+		flexDirection: "row",
+		alignItems: "center",
+	},
+	workoutIcon: {
+		width: 16,
+		height: 16,
+		marginRight: 6,
+	},
+	workoutText: {
+		fontSize: 16,
+		fontWeight: "500",
+	},
+	workoutTime: {
+		fontSize: 14,
+		color: "#666",
+		marginTop: 4,
+	},
+	workoutStats: {
+		alignItems: "flex-end",
+	},
+	calorieContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+	},
+	calorieIcon: {
+		width: 16,
+		height: 16,
+		marginRight: 4,
+	},
+	calorieText: {
+		fontSize: 16,
+		fontWeight: "500",
+	},
+	distanceText: {
+		fontSize: 14,
+		color: "#666",
+		marginTop: 4,
+	},
+	bottomNav: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		paddingVertical: 16,
+		borderTopWidth: 1,
+		borderTopColor: "#e0e0e0",
+		position: "absolute",
+		bottom: 0,
+		left: 0,
+		right: 0,
+		backgroundColor: "white",
+		paddingHorizontal: 24,
+	},
+	navItem: {
+		alignItems: "center",
+	},
+	navIcon: {
+		width: 24,
+		height: 24,
+	},
+	addButton: {
+		backgroundColor: "#f0f0f0",
+		width: 40,
+		height: 40,
+		borderRadius: 20,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	addButtonText: {
+		fontSize: 24,
+		fontWeight: "600",
+	},
+	workoutNavText: {
+		color: "#E74C3C",
+		fontSize: 12,
+	},
+});
+
+export default FitnessActivity;

@@ -7,6 +7,7 @@ import HomeScreen from "./HomeScreen";
 import ScheduleScreen from "./ScheduleScreen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { ScheduleNestedNavigation } from "./StackNestedNavigation";
+import FitnessActivity from "./FitnessAnalysis";
 
 const Tab = createBottomTabNavigator();
 
@@ -75,9 +76,9 @@ function BottomNavigation() {
 			/>
 			<Tab.Screen
 				name="Analytics"
-				component={HomeScreen}
+				component={FitnessActivity}
 				options={() => ({
-					tabBarLabel: "Analytics",
+					tabBarLabel: "Workout",
 					tabBarIcon: ({ color }) => (
 						// <Icon source="chart-bar" color={color} size={26} />
 						<Ionicons name="trending-up" color={color} size={26} />

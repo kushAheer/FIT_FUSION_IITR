@@ -13,25 +13,28 @@ import FitnessAnalysis from './screens/FitnessAnalysis';
 const Stack = createStackNavigator();
 
 export default function App() {
+	const isAuth = true;
 	return (
 		<>
 			<StatusBar style="auto" />
 			<NavigationContainer>
 				<Stack.Navigator
-					initialRouteName="BottomNavigation"
+			
 				>
-					<Stack.Screen
-						name="BottomNavigation"
-						component={BottomNavigation}
-						options={{
-							headerShown: false,
-						}}
-					/>
-					<Stack.Screen
+					{!isAuth ? (
+						<Stack.Screen
 						name = "Login"
-						component={LoginScreen}
+						component={FitnessAnalysis}
 						options={{ headerShown: false }}
-					/>
+						/> ) : (
+						<Stack.Screen
+							name="BottomNavigation"
+							component={BottomNavigation}
+							options={{
+								headerShown: false,
+							}}
+						/>
+					)}
 					
 				</Stack.Navigator>
 				
