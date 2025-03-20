@@ -21,6 +21,7 @@ function ScheduleScreen() {
           </TouchableOpacity>
           <View style={styles.timeContainer}>
             <View style={styles.timeInput}>
+              {/** there is just text here right now add data from data base anagh */}
               <Text style={styles.inputLabel}>Entry Time</Text>
               <Text style={styles.inputValue}>09:00 AM</Text>
             </View>
@@ -52,7 +53,8 @@ function ScheduleScreen() {
               </TouchableOpacity>
               {schedule.showQR && (
                 <View style={styles.qrContainer}>
-                  {/* OR code component will be here left for anagh */}
+                  {/* OR code component will be here left for anagh */
+                  /* retrive data from data base */}
                   <Text style={styles.qrPlaceholder}>QR Code Placeholder</Text>
                 </View>
               )}
