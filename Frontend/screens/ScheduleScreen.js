@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
 	View,
@@ -41,91 +42,72 @@ function ScheduleScreen() {
 		setSchedules(updatedSchedules);
 	};
 
-	return (
-		<View style={styles.container}>
-			<Text>Schedule Screen</Text>
-			<ScrollView contentContainerStyle={styles.content}>
-				<View style={styles.section}>
-					<Text style={styles.sectionTitle}>
-						Add Your Session Details
-					</Text>
-					<TouchableOpacity
-						style={styles.inputField}
-						onPress={() => setShowDatePicker(true)}
-					>
-						<Text style={styles.inputLabel}>Date</Text>
-						<Text style={styles.inputValue}>{"14/05/2025"}</Text>
-					</TouchableOpacity>
-					<View style={styles.timeContainer}>
-						<View style={styles.timeInput}>
-							<Text style={styles.inputLabel}>Entry Time</Text>
-							<Text style={styles.inputValue}>09:00 AM</Text>
-						</View>
-						<View style={styles.timeInput}>
-							<Text style={styles.inputLabel}>Exit Time</Text>
-							<Text style={styles.inputValue}>05:00 PM</Text>
-						</View>
-					</View>
-					<TouchableOpacity style={styles.repeatButton}>
-						<Text style={styles.repeatButtonText}>
-							Repeat Same Schedule Daily
-						</Text>
-					</TouchableOpacity>
-				</View>
-				<TouchableOpacity style={styles.scheduleButton}>
-					<Text style={styles.scheduleButtonText}>
-						Schedule Session
-					</Text>
-				</TouchableOpacity>
-				<View style={styles.section}>
-					<Text style={styles.sectionTitle}>Scheduling History</Text>
-					{schedules.map((schedule, index) => (
-						<View key={index} style={styles.historyItem}>
-							<View style={styles.historyHeader}>
-								<Text style={styles.historyDate}>
-									{schedule.date}
-								</Text>
-								<Text style={styles.historyTime}>
-									{schedule.checkIn} - {schedule.checkOut}
-								</Text>
-							</View>
-							<TouchableOpacity
-								style={styles.qrButton}
-								onPress={() => toggleQR(index)}
-							>
-								<Text style={styles.qrButtonText}>
-									{schedule.showQR
-										? "Hide QR ▲"
-										: "View QR ▼"}
-								</Text>
-							</TouchableOpacity>
-							{schedule.showQR && (
-								<View style={styles.qrContainer}>
-									<Text style={styles.qrPlaceholder}>
-										QR Code Placeholder
-									</Text>
-								</View>
-							)}
-						</View>
-					))}
-				</View>
-			</ScrollView>
-			{/* {showDatePicker && (
-                <DateTimePicker
-                    value={date}
-                    mode="date"
-                    display="default"
-                    onChange={(event, selectedDate) => {
-                        setShowDatePicker(false);
-                        selectedDate && setDate(selectedDate);
-                    }}
-                />
-            )} */}
-		</View>
-	);
-}
-
-export default ScheduleScreen;
+  return (
+    <View style={styles.container}>
+      <Text>Schedule Screen</Text>
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Add Your Session Details</Text>
+          <TouchableOpacity style={styles.inputField} onPress={() => setShowDatePicker(true)}>
+            <Text style={styles.inputLabel}>Date</Text>
+            <Text style={styles.inputValue}>{date.toDateString()}</Text>
+          </TouchableOpacity>
+          <View style={styles.timeContainer}>
+            <View style={styles.timeInput}>
+              <Text style={styles.inputLabel}>Entry Time</Text>
+              <Text style={styles.inputValue}>09:00 AM</Text>
+            </View>
+            <View style={styles.timeInput}>
+              <Text style={styles.inputLabel}>Exit Time</Text>
+              <Text style={styles.inputValue}>05:00 PM</Text>
+            </View>
+          </View>
+          <TouchableOpacity style={styles.repeatButton}>
+            <Text style={styles.repeatButtonText}>Repeat Same Schedule Daily</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={styles.scheduleButton}>
+          <Text style={styles.scheduleButtonText}>Schedule Session</Text>
+        </TouchableOpacity>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Scheduling History</Text>
+          {schedules.map((schedule, index) => (
+            <View key={index} style={styles.historyItem}>
+              <View style={styles.historyHeader}>
+                <Text style={styles.historyDate}>{schedule.date}</Text>
+                <Text style={styles.historyTime}>{schedule.checkIn} - {schedule.checkOut}</Text>
+              </View>
+              
+              <TouchableOpacity 
+                style={styles.qrButton} 
+                onPress={() => toggleQR(index)}>
+                  <Text style={styles.qrButtonText}>View QR ▼</Text>
+              </TouchableOpacity>
+              {schedule.showQR && (
+                <View style={styles.qrContainer}>
+                  {/* OR code component will be here left for anagh */}
+                  <Text style={styles.qrPlaceholder}>QR Code Placeholder</Text>
+                </View>
+              )}
+            </View>
+          ))}
+        </View> 
+      </ScrollView>
+      {showDatePicker && (
+        <DateTimePicker
+          value={date}
+          mode="date"
+          display="default"
+          onChange={(event, selectedDate) => {
+            setShowDatePicker(false);
+            selectedDate && setDate(selectedDate);
+          }}
+        />
+      )}
+    </View>
+  );
+};
+export default ScheduleScreen
 
 const styles = StyleSheet.create({
 	container: {

@@ -8,6 +8,7 @@ import { GlobalStyles } from "./constants/color";
 import ScheduleDetailScreen from "./screens/ScheduleDetailScreen";
 import LoginScreen from './screens/LoginScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
+import FitnessAnalysis from './screens/FitnessAnalysis';
 
 const Stack = createStackNavigator();
 
