@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
 	View,
@@ -9,17 +8,18 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Button from "../UI/Button";
-
+import { GlobalStyles } from "../constants/color"
+import * as DateTimePicker from 'expo-date-time-picker';
 function ScheduleScreen() {
 	const navigation = useNavigation();
-
-	// Initial data for scheduling history
+	const [date, setDate] = useState(new Date());
+	const [showDatePicker, setShowDatePicker] = useState(false); 
 	const [schedules, setSchedules] = useState([
 		{
 			date: "14/05/2025",
 			checkIn: "09:00 AM",
 			checkOut: "05:00 PM",
-			showQR: false, // QR visibility
+			showQR: false, 
 		},
 		{
 			date: "15/05/2025",
@@ -112,7 +112,7 @@ export default ScheduleScreen
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
+		backgroundColor: GlobalStyles.colors.backgroundColor,
 		paddingHorizontal: 20,
 	},
 	content: {
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
 	},
 	section: {
 		marginVertical: 20,
-		backgroundColor: "#FFFFFF",
+		backgroundColor: GlobalStyles.colors.backgroundColor,
 		borderRadius: 12,
 		padding: 16,
 		shadowColor: "#000",
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
 	sectionTitle: {
 		fontSize: 18,
 		fontWeight: "600",
-		color: "#333333",
+		color: GlobalStyles.colors.black,
 		marginBottom: 16,
 	},
 	inputField: {
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
 	},
 	inputValue: {
 		fontSize: 16,
-		color: "#000000",
+		color: GlobalStyles.colors.black,
 		fontWeight: "500",
 	},
 	timeContainer: {
@@ -160,32 +160,32 @@ const styles = StyleSheet.create({
 		width: "48%",
 	},
 	repeatButton: {
-		backgroundColor: "#F5F5F5",
+		backgroundColor: GlobalStyles.colors.secondary,
 		padding: 12,
 		borderRadius: 8,
 		alignItems: "center",
 		marginTop: 10,
 	},
 	repeatButtonText: {
-		color: "#007AFF",
+		color: GlobalStyles.colors.primary50,
 		fontWeight: "500",
 	},
 	scheduleButton: {
-		backgroundColor: "#007AFF",
+		backgroundColor: GlobalStyles.colors.primary,
 		padding: 16,
 		borderRadius: 8,
 		alignItems: "center",
 		marginVertical: 20,
 	},
 	scheduleButtonText: {
-		color: "#FFFFFF",
+		color: GlobalStyles.colors.backgroundColor,
 		fontWeight: "bold",
 		fontSize: 16,
 	},
 	historyItem: {
 		marginVertical: 12,
 		padding: 16,
-		backgroundColor: "#F9F9F9",
+		backgroundColor: GlobalStyles.colors.gray,
 		borderRadius: 8,
 	},
 	historyHeader: {
@@ -195,17 +195,17 @@ const styles = StyleSheet.create({
 	},
 	historyDate: {
 		fontWeight: "500",
-		color: "#000000",
+		color: GlobalStyles.colors.black,
 	},
 	historyTime: {
-		color: "#666666",
+		color: GlobalStyles.colors.gray50,
 	},
 	qrButton: {
 		alignSelf: "flex-end",
 		padding: 8,
 	},
 	qrButtonText: {
-		color: "#007AFF",
+		color: GlobalStyles.colors.primary,
 		fontWeight: "500",
 	},
 	qrContainer: {
@@ -216,6 +216,6 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	qrPlaceholder: {
-		color: "#CCCCCC",
+		color: GlobalStyles.colors.gray100,
 	},
 });

@@ -2,6 +2,7 @@ import React, { useState, usestate } from "react";
 import { view, Text, TextInput , TouchableOpacity, StyleSheet, StatusBar} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { GlobalStyles } from "../constants/color";
 
 const LoginScreen = () => {
     const [email, setEmail] = useState('');
@@ -57,7 +58,7 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: GlobalStyles.colors.backgroundColor,
     },
     content: {                   
         flex: 1,
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     loginHeader: {
         fontSize: 28,
         fontWeight: "bold",
-        color: '#000',
+        color: GlobalStyles.colors.black,
         marginBottom: 40,
         textAlign: 'center',
     },
@@ -86,23 +87,23 @@ const styles = StyleSheet.create({
     },
     forgotpasstext: {
         fontSize: 16,
-        color: '#666',
+        color: GlobalStyles.colors.gray50,
         marginBottom: 10,
     },
     forgotpasslink: {
-        color: '#007bff',
+        color: GlobalStyles.colors.primary50,
         fontSize: 16,
         fontWeight: '500',
     },
     loginBotton: {
-        backgroundColor: '#007bff',
+        backgroundColor: GlobalStyles.colors.primary,
         padding: 16,
         borderRadius: 8,
         marginTop: 40,
         alignItems: 'center',
     },
     loginBottontext: {
-        color: '#fff',
+        color: GlobalStyles.colors.backgroundColor,
         fontSize: 16,
         fontWeight: 'bold',
     },
