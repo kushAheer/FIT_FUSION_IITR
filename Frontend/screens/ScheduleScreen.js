@@ -9,7 +9,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Button from "../UI/Button";
 import { GlobalStyles } from "../constants/color"
-import * as DateTimePicker from 'expo-date-time-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 function ScheduleScreen() {
 	const navigation = useNavigation();
 	const [date, setDate] = useState(new Date());
