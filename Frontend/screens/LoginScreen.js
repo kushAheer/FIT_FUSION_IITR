@@ -1,7 +1,8 @@
-import React, { useState, usestate } from "react";
-import { view, Text, TextInput , TouchableOpacity, StyleSheet, StatusBar} from 'react-native';
+import React, { useState } from "react";
+import { View, Text , TouchableOpacity, StyleSheet, StatusBar} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { TextInput } from "react-native-paper";
 import { GlobalStyles } from "../constants/color";
 
 const LoginScreen = () => {
@@ -9,9 +10,9 @@ const LoginScreen = () => {
     const [password, confirmpassword] = useState('');
     const navigation = useNavigation();
  
-    const loginlogic = () => {
+    const loginlogic = () => {        // once decided how we will handle multiple usernames it will be added 
+
         //logic of login will be here this is temp for some time to return back to
-        // once decided how we will handle multiple usernames it will be added 
         navigation.navigate('HomeScreen');
     };
     return (
@@ -27,7 +28,7 @@ const LoginScreen = () => {
                 <Text style={styles.loginHeader}>Login</Text>
                 <TextInput
                     style = {styles.input}
-                    username = "Enter Email or Username"
+                    label = "Enter Email or Username"
                     usernametextcolor = "#888"
                     autoCapitalize="none"
                     value={email}
@@ -36,13 +37,13 @@ const LoginScreen = () => {
                 <TextInput
                     style = {styles.input}
                     pass = "password"
-                    passtextcolor="#888"
+                    passte0xtcolor="#888"
                     secureTextEntry
                     value={password}
                     onChangeText={confirmpassword}
                 /> 
                 <View style={styles.forgotpasscontainer}>
-                    <Text style={forgotpasstext}>Forgot Password</Text>
+                    <Text style={styles.forgotpasstext}>Forgot Password</Text>
                     <TouchableOpacity onPress={()=> navigation.navigate("forgot password")}>
                         <Text style= {styles.forgotpasslink}>Forgot Password?</Text>
                     </TouchableOpacity>
