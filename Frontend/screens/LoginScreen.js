@@ -4,35 +4,55 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { TextInput } from "react-native-paper";
 import { GlobalStyles } from "../constants/color";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CryptoJS from 'crypto-js'; // Replace bcryptjs with crypto-js
 
-const LoginScreen = () => {
+const backendUrl = "https://fit-fusion-db-default-rtdb.firebaseio.com";
+
+const LoginScreen = ({ authHandler}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigation = useNavigation();
 
     const loginlogic = async () => {
         try {
-            // Replace '.' with 'dot' in email for Firebase key compatibility
-            const sanitizedEmail = email.replace(/\./g, "dot");
+            const response = await fetch(`${backendUrl}/users.json`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
-            // Fetch user data from Firebase
-            const response = await fetch(`https://fit-fusion-db-default-rtdb.firebaseio.com/users/${sanitizedEmail}.json`);
-            const userData = await response.json();
+            if (!response.ok) {
+                alert("Failed to fetch user data. Please try again.");
+                return;
+            }
 
-            if (!userData) {
+            const usersData = await response.json();
+
+            if (!usersData) {
+                alert("No users found!");
+                return;
+            }
+
+            // Find the user by email
+            const user = Object.values(usersData).find(user => user.email === email);
+
+            if (!user) {
                 alert("User not found!");
                 return;
             }
 
-            // Validate password
-            const isPasswordValid = await bcrypt.compare(password, userData.password);
-            if (!isPasswordValid) {
+            if (password !== user.password) { // Directly compare passwords
                 alert("Invalid password!");
                 return;
             }
 
-            alert(`Welcome back, ${userData.name}!`);
-            navigation.navigate('HomeScreen');
+            alert(`Welcome back, ${user.name}!`);
+            await AsyncStorage.setItem('isAuth', 'true');
+            authHandler();
+            // navigation.navigate('HomeScreen');
+
         } catch (error) {
             console.error("Error logging in:", error.message);
             alert("An error occurred during login.");
@@ -41,23 +61,14 @@ const LoginScreen = () => {
 
     const signuplogic = async (name, age) => {
         try {
-            // Replace '.' with 'dot' in email for Firebase key compatibility
-            const sanitizedEmail = email.replace(/\./g, "dot");
-
-            // Hash the password using bcrypt
-            const hashedPassword = await bcrypt.hash(password, 10);
-
-            // Create a new user in Firebase
-            const response = await fetch(`https://fit-fusion-db-default-rtdb.firebaseio.com/users/${sanitizedEmail}.json`, {
-                method: 'PUT',
+            const response = await fetch(`${backendUrl}/users.json`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    name: name,
                     email: email,
-                    age: age,
-                    password: hashedPassword,
+                    password: password, // Store password directly
                 }),
             });
 
