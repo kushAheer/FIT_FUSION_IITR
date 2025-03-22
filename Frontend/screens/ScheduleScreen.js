@@ -71,7 +71,9 @@ function ScheduleScreen() {
   };
   return (
     <View style={styles.container}>
-      <Text>Schedule Screen</Text>
+      {/* <Button onPress={() => navigation.navigate("Home")}>
+        <Text>Go to Home</Text>
+      </Button> */}
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Add Your Session Details</Text>

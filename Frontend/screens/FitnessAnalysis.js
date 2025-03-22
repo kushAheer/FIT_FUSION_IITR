@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
 	SafeAreaView,
 	View,
@@ -6,10 +6,12 @@ import {
 	StyleSheet,
 	TouchableOpacity,
 	Image,
+	PermissionsAndroid,
+	Platform,
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { FlatList } from "react-native-gesture-handler";
-import { Svg, Path } from "react-native-svg";
+import { Pedometer } from "expo-sensors";
 
 const FitnessActivity = () => {
 	// Sample data for the line chart
@@ -55,6 +57,50 @@ const FitnessActivity = () => {
 			color: "#E6F0FF",
 		},
 	];
+
+	// Pedometer state
+	const [isPedometerAvailable, setIsPedometerAvailable] =
+		useState("checking");
+	const [stepCount, setStepCount] = useState(0);
+
+	// Start pedometer updates
+	useEffect(() => {
+		// Request permissions on Android
+		const requestPermission = async () => {
+			if (Platform.OS === "android") {
+				try {
+					const granted = await PermissionsAndroid.request(
+						PermissionsAndroid.PERMISSIONS.ACTIVITY_RECOGNITION
+					);
+					if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+						console.error("ACTIVITY_RECOGNITION permission denied");
+					}
+				} catch (err) {
+					console.warn(err);
+				}
+			}
+		};
+
+		requestPermission();
+
+		Pedometer.isAvailableAsync().then(
+			(result) => {
+				setIsPedometerAvailable(result ? "available" : "not available");
+			},
+			(error) => {
+				setIsPedometerAvailable("not available");
+				console.error(error);
+			}
+		);
+
+		const subscription = Pedometer.watchStepCount((result) => {
+			console.log("Steps counted:", result.steps); // Debugging log
+			setStepCount(result.steps);
+		});
+
+		// Cleanup subscription on unmount
+		return () => subscription && subscription.remove();
+	}, []);
 
 	return (
 		<SafeAreaView style={styles.container}>
@@ -109,10 +155,16 @@ const FitnessActivity = () => {
 				</View>
 			</View>
 
+			{/* Pedometer Section */}
+			<View style={styles.pedometerContainer}>
+				<Text style={styles.pedometerTitle}>Pedometer</Text>
+				<Text style={styles.pedometerStatus}>
+					Pedometer is {isPedometerAvailable}.
+				</Text>
+				<Text style={styles.stepCount}>Steps Taken: {stepCount}</Text>
+			</View>
+
 			{/* Previous Workouts */}
-			{/* {workouts.map(workout => (
-        
-      ))} */}
 			<FlatList
 				data={workouts}
 				renderItem={(workout) => (
@@ -125,7 +177,6 @@ const FitnessActivity = () => {
 					>
 						<View style={styles.workoutInfo}>
 							<View style={styles.workoutType}>
-								
 								<Text style={styles.workoutText}>Running</Text>
 							</View>
 							<Text style={styles.workoutTime}>
@@ -134,7 +185,6 @@ const FitnessActivity = () => {
 						</View>
 						<View style={styles.workoutStats}>
 							<View style={styles.calorieContainer}>
-
 								<Text style={styles.calorieText}>
 									{workout.item.calories} Cal
 								</Text>
@@ -209,6 +259,27 @@ const styles = StyleSheet.create({
 		color: "#666",
 	},
 	statsValue: {
+		fontSize: 16,
+		fontWeight: "600",
+		color: "#E74C3C",
+	},
+	pedometerContainer: {
+		marginVertical: 16,
+		padding: 16,
+		backgroundColor: "#f9f9f9",
+		borderRadius: 12,
+	},
+	pedometerTitle: {
+		fontSize: 18,
+		fontWeight: "600",
+		marginBottom: 10,
+	},
+	pedometerStatus: {
+		fontSize: 14,
+		color: "#666",
+		marginBottom: 5,
+	},
+	stepCount: {
 		fontSize: 16,
 		fontWeight: "600",
 		color: "#E74C3C",
