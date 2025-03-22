@@ -76,12 +76,6 @@ const LoginScreen = () => {
     return (
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-            <TouchableOpacity
-                style={styles.backButton}
-                onPress={() => navigation.goBack()}
-            >
-                <Icon name="arrow-back" size={24} color="#000" />
-            </TouchableOpacity>
             <View style={styles.content}>
                 <Text style={styles.loginHeader}>Login</Text>
                 <TextInput
@@ -167,12 +161,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
-    backButton: {
-        position: 'absolute',
-        top: 50,
-        left: 20,
-        zIndex: 1,
-      },
+    
 });
 
 export default LoginScreen;

@@ -9,8 +9,16 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { GlobalStyles } from "../constants/color";
+import ScheduleScreen from "./ScheduleScreen";
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
+
+
+	const handlePress= ()=>{
+		navigation.navigate('Schedule');
+	}
+
+
 	return (
 		<ScrollView style={styles.container}>
 
@@ -56,8 +64,12 @@ const HomeScreen = () => {
 						<Text style={styles.sessionTime}>03:45 PM</Text>
 					</View>
 				</View>
-				<TouchableOpacity style={styles.editButton}>
+				<TouchableOpacity 
+					style={styles.editButton}
+					onPress={handlePress}
+				>
 					<Text style={styles.editButtonText}>Edit Session</Text>
+
 				</TouchableOpacity>
 			</View>
 

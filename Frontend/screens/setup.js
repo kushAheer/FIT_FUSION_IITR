@@ -80,16 +80,15 @@ export function setup({navigation}){
   };
   const completeSetup = async () => {
     try {
-      // Store user data
       await AsyncStorage.setItem("userData", JSON.stringify(userData));
       
-      // Set flag that setup is complete
       await AsyncStorage.setItem("setupComplete", "true");
       const fileUri = FileSystem.documentDirectory + 'userData.json';
       await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(userData));
       console.log("User data saved to file:", fileUri);
-      navigation.replace("HomeScreen");
-    } catch (error) {
+      navigation.replace("BottomNavigation");
+    }
+    catch (error) {
       console.error("Error saving user data", error);
     }
   };
@@ -195,7 +194,7 @@ const renderStep3 = () => (
     <View style={styles.inputGroup}>
       <Text style={styles.label}>Diet Preference</Text>
       <View style={styles.dietOptionsContainer}>
-        {["Vegan", "Vegetarian", "Eggetarian", "Non-Vegetarian"].map((diet) => (
+        {["Vegan", "Vegetarian(no egg)", "Eggetarian", "Non-Vegetarian"].map((diet) => (
           <TouchableOpacity
             key={diet}
             style={[

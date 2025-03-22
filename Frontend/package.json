@@ -12,14 +12,11 @@
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/datetimepicker": "8.2.0",
     "@react-navigation/bottom-tabs": "^7.2.1",
-<<<<<<< HEAD
     "@react-navigation/native": "^7.0.17",
     "@react-navigation/stack": "^7.2.1",
-=======
     "@react-navigation/native": "^7.0.15",
     "@react-navigation/stack": "^7.1.2",
     "@reduxjs/toolkit": "^2.6.1",
->>>>>>> 4d3d69d8adeed49c7228cdaffaee6924b42af94d
     "expo": "~52.0.38",
     "expo-file-system": "^18.0.12",
     "expo-linear-gradient": "^14.0.2",
