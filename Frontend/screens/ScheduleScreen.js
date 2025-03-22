@@ -16,9 +16,7 @@ function ScheduleScreen() {
   const navigation = useNavigation();
   const [date, setDate] = useState(new Date());
   const [entryTime, setEntryTime] = useState("09:00 AM");
-  const [exitTime, setExitTime] = useState("05:00 PM");
-  // Remove showDatePicker state since we won't use DateTimePicker
-  
+  const [exitTime, setExitTime] = useState("05:00 PM");  
   const [schedules, setSchedules] = useState([
     {
       date: "14/05/2025",
@@ -39,24 +37,20 @@ function ScheduleScreen() {
       showQR: false,
     },
   ]);
-
   const toggleQR = (index) => {
     const updatedSchedules = schedules.map((schedule, i) =>
       i === index ? { ...schedule, showQR: !schedule.showQR } : schedule
     );
     setSchedules(updatedSchedules);
   };
-
   const addNewSchedule = () => {
     const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
-    
     const newSchedule = {
       date: formattedDate,
       checkIn: entryTime,
       checkOut: exitTime,
       showQR: false,
     };
-    
     setSchedules([...schedules, newSchedule]);
   };
   const incrementDate = () => {
@@ -71,21 +65,14 @@ function ScheduleScreen() {
   };
   return (
     <View style={styles.container}>
-      {/* <Button onPress={() => navigation.navigate("Home")}>
-        <Text>Go to Home</Text>
-      </Button> */}
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Add Your Session Details</Text>
-          
-          {/* Simple date selector with arrows */}
           <View style={styles.dateSelector}>
             <TouchableOpacity onPress={decrementDate}>
               <Text style={styles.dateArrow}>◀</Text>
             </TouchableOpacity>
-            
             <Text style={styles.dateText}>{date.toDateString()}</Text>
-            
             <TouchableOpacity onPress={incrementDate}>
               <Text style={styles.dateArrow}>▶</Text>
             </TouchableOpacity>
@@ -134,7 +121,6 @@ function ScheduleScreen() {
               </TouchableOpacity>
               {schedule.showQR && (
                 <View style={styles.qrContainer}>
-                  {/* QR code component will be here */}
                   <Text style={styles.qrPlaceholder}>QR Code Placeholder</Text>
                 </View>
               )}

@@ -13,8 +13,8 @@ import { GlobalStyles } from "../constants/color";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from 'expo-file-system';
 
-export function setup({navigation}){
-    const [currentStep, setCurrentStep] = useState(1);
+export function setup({ navigation }) {
+  const [currentStep, setCurrentStep] = useState(1);
   const [userData, setUserData] = useState({
     name: "",
     email: "",
@@ -29,10 +29,10 @@ export function setup({navigation}){
   });
   const [passwordError, setPasswordError] = useState("");
   const [formErrors, setFormErrors] = useState({});
-  const updateUserData = (field, value) =>{
+  const updateUserData = (field, value) => {
     setUserData({ ...userData, [field]: value });
     if (formErrors[field]) {
-    setFormErrors({ ...formErrors, [field]: "" });
+      setFormErrors({ ...formErrors, [field]: "" });
     }
     if (field === "confirmPassword" && userData.password !== value) {
       setPasswordError("Passwords do not match");
@@ -56,7 +56,7 @@ export function setup({navigation}){
       if (!userData.weight) errors.weight = "Weight is required";
       if (!userData.height) errors.height = "Height is required";
     }
-    
+
     if (currentStep === 3) {
       if (!userData.diet) errors.diet = "Diet preference is required";
       if (!userData.goals) errors.goals = "Goals are required";
@@ -81,12 +81,12 @@ export function setup({navigation}){
   const completeSetup = async () => {
     try {
       await AsyncStorage.setItem("userData", JSON.stringify(userData));
-      
+
       await AsyncStorage.setItem("setupComplete", "true");
       const fileUri = FileSystem.documentDirectory + 'userData.json';
       await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(userData));
       console.log("User data saved to file:", fileUri);
-      navigation.replace("BottomNavigation");
+      navigation.navigate("BottomNavigation");
     }
     catch (error) {
       console.error("Error saving user data", error);
@@ -95,7 +95,7 @@ export function setup({navigation}){
   const renderStep1 = () => (
     <View style={styles.formContainer}>
       <Text style={styles.stepTitle}>Create Your Account</Text>
-      
+
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Full Name</Text>
         <TextInput
@@ -106,7 +106,7 @@ export function setup({navigation}){
         />
         {formErrors.name ? <Text style={styles.errorText}>{formErrors.name}</Text> : null}
       </View>
-      
+
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Email</Text>
         <TextInput
@@ -119,7 +119,7 @@ export function setup({navigation}){
         />
         {formErrors.email ? <Text style={styles.errorText}>{formErrors.email}</Text> : null}
       </View>
-      
+
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Password</Text>
         <TextInput
@@ -131,7 +131,7 @@ export function setup({navigation}){
         />
         {formErrors.password ? <Text style={styles.errorText}>{formErrors.password}</Text> : null}
       </View>
-      
+
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Confirm Password</Text>
         <TextInput
@@ -149,7 +149,7 @@ export function setup({navigation}){
   const renderStep2 = () => (
     <View style={styles.formContainer}>
       <Text style={styles.stepTitle}>Personal Details</Text>
-      
+
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Date of Birth</Text>
         <TextInput
@@ -160,7 +160,7 @@ export function setup({navigation}){
         />
         {formErrors.dob ? <Text style={styles.errorText}>{formErrors.dob}</Text> : null}
       </View>
-      
+
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Weight (kg)</Text>
         <TextInput
@@ -172,7 +172,7 @@ export function setup({navigation}){
         />
         {formErrors.weight ? <Text style={styles.errorText}>{formErrors.weight}</Text> : null}
       </View>
-      
+
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Height (cm)</Text>
         <TextInput
@@ -187,63 +187,63 @@ export function setup({navigation}){
     </View>
   );
 
-const renderStep3 = () => (
-  <View style={styles.formContainer}>
-    <Text style={styles.stepTitle}>Preferences</Text>
-    
-    <View style={styles.inputGroup}>
-      <Text style={styles.label}>Diet Preference</Text>
-      <View style={styles.dietOptionsContainer}>
-        {["Vegan", "Vegetarian(no egg)", "Eggetarian", "Non-Vegetarian"].map((diet) => (
-          <TouchableOpacity
-            key={diet}
-            style={[
-              styles.dietOption,
-              userData.diet === diet ? styles.selectedDietOption : {}
-            ]}
-            onPress={() => updateUserData("diet", diet)}
-          >
-            <Text 
+  const renderStep3 = () => (
+    <View style={styles.formContainer}>
+      <Text style={styles.stepTitle}>Preferences</Text>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Diet Preference</Text>
+        <View style={styles.dietOptionsContainer}>
+          {["Vegan", "Vegetarian(no egg)", "Eggetarian", "Non-Vegetarian"].map((diet) => (
+            <TouchableOpacity
+              key={diet}
               style={[
-                styles.dietOptionText,
-                userData.diet === diet ? styles.selectedDietOptionText : {}
+                styles.dietOption,
+                userData.diet === diet ? styles.selectedDietOption : {}
               ]}
+              onPress={() => updateUserData("diet", diet)}
             >
-              {diet}
-            </Text>
-          </TouchableOpacity>
-        ))}
+              <Text
+                style={[
+                  styles.dietOptionText,
+                  userData.diet === diet ? styles.selectedDietOptionText : {}
+                ]}
+              >
+                {diet}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        {formErrors.diet ? <Text style={styles.errorText}>{formErrors.diet}</Text> : null}
       </View>
-      {formErrors.diet ? <Text style={styles.errorText}>{formErrors.diet}</Text> : null}
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Fitness Goals</Text>
+        <TextInput
+          style={styles.input}
+          value={userData.goals}
+          onChangeText={(text) => updateUserData("goals", text)}
+          placeholder="Weight loss, muscle gain, etc."
+        />
+        {formErrors.goals ? <Text style={styles.errorText}>{formErrors.goals}</Text> : null}
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Available Mess</Text>
+        <TextInput
+          style={styles.input}
+          value={userData.availableMess}
+          onChangeText={(text) => updateUserData("availableMess", text)}
+          placeholder="Enter mess name or location"
+        />
+        {formErrors.availableMess ? <Text style={styles.errorText}>{formErrors.availableMess}</Text> : null}
+      </View>
     </View>
-    
-    <View style={styles.inputGroup}>
-      <Text style={styles.label}>Fitness Goals</Text>
-      <TextInput
-        style={styles.input}
-        value={userData.goals}
-        onChangeText={(text) => updateUserData("goals", text)}
-        placeholder="Weight loss, muscle gain, etc."
-      />
-      {formErrors.goals ? <Text style={styles.errorText}>{formErrors.goals}</Text> : null}
-    </View>
-    
-    <View style={styles.inputGroup}>
-      <Text style={styles.label}>Available Mess</Text>
-      <TextInput
-        style={styles.input}
-        value={userData.availableMess}
-        onChangeText={(text) => updateUserData("availableMess", text)}
-        placeholder="Enter mess name or location"
-      />
-      {formErrors.availableMess ? <Text style={styles.errorText}>{formErrors.availableMess}</Text> : null}
-    </View>
-  </View>
-);
+  );
   const renderStep4 = () => (
     <View style={styles.formContainer}>
       <Text style={styles.stepTitle}>Review Your Information</Text>
-      
+
       <View style={styles.reviewContainer}>
         <View style={styles.reviewSection}>
           <Text style={styles.reviewSectionTitle}>Account</Text>
@@ -256,7 +256,7 @@ const renderStep3 = () => (
             <Text style={styles.reviewValue}>{userData.email}</Text>
           </View>
         </View>
-        
+
         <View style={styles.reviewSection}>
           <Text style={styles.reviewSectionTitle}>Personal</Text>
           <View style={styles.reviewItem}>
@@ -272,7 +272,7 @@ const renderStep3 = () => (
             <Text style={styles.reviewValue}>{userData.height} cm</Text>
           </View>
         </View>
-        
+
         <View style={styles.reviewSection}>
           <Text style={styles.reviewSectionTitle}>Preferences</Text>
           <View style={styles.reviewItem}>
@@ -289,7 +289,7 @@ const renderStep3 = () => (
           </View>
         </View>
       </View>
-      
+
       <Text style={styles.disclaimer}>
         By completing setup, you agree to our Terms and Privacy Policy.
       </Text>
@@ -319,33 +319,33 @@ const renderStep3 = () => (
           <Text style={styles.headerText}>Welcome to FitFusion</Text>
           <Text style={styles.subHeader}>Let's set up your profile</Text>
         </View>
-        
+
         <View style={styles.progressContainer}>
           {[1, 2, 3, 4].map((step) => (
-            <View 
-              key={step} 
+            <View
+              key={step}
               style={[
-                styles.progressStep, 
+                styles.progressStep,
                 currentStep >= step ? styles.activeStep : {}
               ]}
             />
           ))}
         </View>
-        
+
         {renderCurrentStep()}
-        
+
         <View style={styles.buttonContainer}>
           {currentStep > 1 && (
             <TouchableOpacity style={styles.backButton} onPress={handleBack}>
               <Text style={styles.backButtonText}>Back</Text>
             </TouchableOpacity>
           )}
-          
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={[
               styles.nextButton,
               currentStep === 1 ? { flex: 2 } : { flex: 1 }
-            ]} 
+            ]}
             onPress={handleNext}
           >
             <Text style={styles.nextButtonText}>

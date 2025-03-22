@@ -9,28 +9,23 @@ const LoginScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigation = useNavigation();
-
+    const handlePress= ()=>{
+		navigation.navigate('setup');
+	}
     const loginlogic = async () => {
         try {
-            // Replace '.' with 'dot' in email for Firebase key compatibility
             const sanitizedEmail = email.replace(/\./g, "dot");
-
-            // Fetch user data from Firebase
             const response = await fetch(`https://fit-fusion-db-default-rtdb.firebaseio.com/users/${sanitizedEmail}.json`);
             const userData = await response.json();
-
             if (!userData) {
                 alert("User not found!");
                 return;
             }
-
-            // Validate password
             const isPasswordValid = await bcrypt.compare(password, userData.password);
             if (!isPasswordValid) {
                 alert("Invalid password!");
                 return;
             }
-
             alert(`Welcome back, ${userData.name}!`);
             navigation.navigate('HomeScreen');
         } catch (error) {
@@ -41,13 +36,8 @@ const LoginScreen = () => {
 
     const signuplogic = async (name, age) => {
         try {
-            // Replace '.' with 'dot' in email for Firebase key compatibility
             const sanitizedEmail = email.replace(/\./g, "dot");
-
-            // Hash the password using bcrypt
             const hashedPassword = await bcrypt.hash(password, 10);
-
-            // Create a new user in Firebase
             const response = await fetch(`https://fit-fusion-db-default-rtdb.firebaseio.com/users/${sanitizedEmail}.json`, {
                 method: 'PUT',
                 headers: {
@@ -60,7 +50,6 @@ const LoginScreen = () => {
                     password: hashedPassword,
                 }),
             });
-
             if (response.ok) {
                 alert("User signed up successfully!");
                 navigation.navigate('HomeScreen');
@@ -72,7 +61,6 @@ const LoginScreen = () => {
             alert("An error occurred during signup.");
         }
     };
-
     return (
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor="#fff" />
@@ -101,14 +89,13 @@ const LoginScreen = () => {
                 <TouchableOpacity onPress={loginlogic}>
                     <Text style={styles.loginBotton}>LOGIN</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => signuplogic("John Doe", 25)}>
+                <TouchableOpacity onPress= {handlePress}>
                     <Text style={styles.loginBotton}>SIGNUP</Text>
                 </TouchableOpacity>
             </View>
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -163,5 +150,4 @@ const styles = StyleSheet.create({
     },
     
 });
-
 export default LoginScreen;

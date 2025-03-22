@@ -46,10 +46,10 @@ function BottomNavigation() {
 				})}
 			/>
 			<Tab.Screen
-				name="Compass"
+				name="social"
 				component={FitnessSocialApp}
 				options={() => ({
-					tabBarLabel: "Compass",
+					tabBarLabel: "social",
 					tabBarIcon: ({ color }) => (
 						<Icon source="compass-outline" color={color} size={26} />
 					),

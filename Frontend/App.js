@@ -10,11 +10,16 @@ import LoginScreen from './screens/LoginScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
 import FitnessAnalysis from './screens/FitnessAnalysis';
 import setup, { singup } from './screens/setup';
+import { useState } from "react";
 
 const Stack = createStackNavigator();
 
 export default function App() {
-	const isAuth = true;
+
+	const [isAuth , setIsAuth] = useState(false)
+	const loginHandler = ()=>{
+		setIsAuth((prev)=>!prev)
+	}
 	return (
 		<>
 			<StatusBar style="auto" />
@@ -24,14 +29,14 @@ export default function App() {
 				>
 					{!isAuth ? (
 						<>
-						<Stack.Screen name="Register" component={setup}tions={{headerShown : false}}/>
-						<Stack.Screen
-						name = "Login"
-						component={FitnessAnalysis}
-						options={{ headerShown: false }}
-						/>
+							<Stack.Screen name="Register" component={setup} tions={{ headerShown: false }} />
+							<Stack.Screen
+								name="Login"
+								component={FitnessAnalysis}
+								options={{ headerShown: false }}
+							/>
 						</>
-						) : (
+					) : (
 						<Stack.Screen
 							name="BottomNavigation"
 							component={BottomNavigation}
