@@ -2,7 +2,6 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, get, update } from "firebase/database";
 import { firebaseConfig } from "./firebase_setup.js";
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
@@ -21,7 +20,7 @@ async function addBookedSlotsToUsers() {
     for (const userKey in users) {
       const userRef = ref(database, `users/${userKey}`);
       await update(userRef, {
-        bookedSlots: {}, // Add an empty bookedSlots field
+        bookedSlots: {}, 
       });
       console.log(`Updated user: ${userKey}`);
     }
@@ -31,6 +30,4 @@ async function addBookedSlotsToUsers() {
     console.error("Error updating users:", error.message);
   }
 }
-
-// Run the script
 addBookedSlotsToUsers();
