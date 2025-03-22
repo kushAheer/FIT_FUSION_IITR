@@ -13,7 +13,7 @@ import { GlobalStyles } from "../constants/color";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from 'expo-file-system';
 
-export function setup({navigation}){
+export function setup({navigation , authHandler}) {
     const [currentStep, setCurrentStep] = useState(1);
   const [userData, setUserData] = useState({
     name: "",
@@ -86,7 +86,7 @@ export function setup({navigation}){
       const fileUri = FileSystem.documentDirectory + 'userData.json';
       await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(userData));
       console.log("User data saved to file:", fileUri);
-      navigation.replace("BottomNavigation");
+      authHandler();
     }
     catch (error) {
       console.error("Error saving user data", error);

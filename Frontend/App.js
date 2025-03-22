@@ -25,7 +25,9 @@ export default function App() {
 			<NavigationContainer>
 					{!isAuth ? (
 						<>
-						<Stack.Screen name="Register" component={setup}tions={{headerShown : false}}/>
+						<Stack.Screen name="Register" component={setup}options={{headerShown : false}}
+							children={(props) => <setup {...props} authHandler={authHandler} />} // Pass authHandler	
+						/>
 						<Stack.Screen
 							name="Login"
 							options={{ headerShown: false }}
