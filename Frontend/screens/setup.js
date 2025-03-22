@@ -13,7 +13,7 @@ import { GlobalStyles } from "../constants/color";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from "expo-file-system";
 
-export function setup({ navigation, authHandler }) {
+export function Setup({ navigation, authHandler }) {
 	const [currentStep, setCurrentStep] = useState(1);
 	const [userData, setUserData] = useState({
 		name: "",
@@ -341,7 +341,7 @@ export function setup({ navigation, authHandler }) {
 			</View>
 
 			<Text style={styles.disclaimer}>
-				By completing setup, you agree to our Terms and Privacy Policy.
+				By completing Setup, you agree to our Terms and Privacy Policy.
 			</Text>
 		</View>
 	);
@@ -591,4 +591,4 @@ const styles = StyleSheet.create({
 		marginTop: 20,
 	},
 });
-export default setup;
+export default Setup;

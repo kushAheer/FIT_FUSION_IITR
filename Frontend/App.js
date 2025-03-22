@@ -7,7 +7,7 @@ import { GlobalStyles } from "./constants/color";
 import LoginScreen from "./screens/LoginScreen";
 import FitnessAnalysis from "./screens/FitnessAnalysis";
 import React, { useState, useEffect } from "react";
-import SetUp from "./screens/SetUp";
+import Setup, { singup } from './screens/setup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -29,7 +29,7 @@ export default function App() {
 								name="Register"
 								options={{ headerShown: false }}
 								children={(props) => (
-									<SetUp
+									<Setup
 										{...props}
 										authHandler={loginHandler}
 									/>
@@ -55,7 +55,7 @@ export default function App() {
 									{...props}
 									authHandler={loginHandler}
 								/>
-							)} // Pass authHandler
+							)} 
 						/>
 					)}
 				</Stack.Navigator>
