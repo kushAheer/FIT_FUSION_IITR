@@ -1,16 +1,15 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-
+import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import BottomNavigation from "./screens/BottomNavigation";
 import { GlobalStyles } from "./constants/color";
-import ScheduleDetailScreen from "./screens/ScheduleDetailScreen";
 import LoginScreen from './screens/LoginScreen';
-import ScheduleScreen from './screens/ScheduleScreen';
 import FitnessAnalysis from './screens/FitnessAnalysis';
+import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import setup, { singup } from './screens/setup';
-import { useState } from "react";
+
 
 const Stack = createStackNavigator();
 
@@ -37,15 +36,11 @@ export default function App() {
 					) : (
 						<Stack.Screen
 							name="BottomNavigation"
-							component={BottomNavigation}
-							options={{
-								headerShown: false,
-							}}
+							options={{ headerShown: false }}
+							children={(props) => <BottomNavigation {...props} authHandler={authHandler} />} // Pass authHandler
 						/>
 					)}
-
-				</Stack.Navigator>
-
+					</Stack.Navigator>
 			</NavigationContainer>
 		</>
 	);

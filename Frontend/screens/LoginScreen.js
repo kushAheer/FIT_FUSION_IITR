@@ -4,8 +4,12 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { TextInput } from "react-native-paper";
 import { GlobalStyles } from "../constants/color";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const LoginScreen = () => {
+
+const backendUrl = "https://fit-fusion-db-default-rtdb.firebaseio.com";
+
+const LoginScreen = ({ authHandler}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigation = useNavigation();
@@ -44,10 +48,8 @@ const LoginScreen = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    name: name,
                     email: email,
-                    age: age,
-                    password: hashedPassword,
+                    password: password, // Store password directly
                 }),
             });
             if (response.ok) {
