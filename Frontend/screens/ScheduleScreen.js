@@ -48,7 +48,6 @@ function ScheduleScreen() {
   };
 
   const addNewSchedule = () => {
-    // Format date to DD/MM/YYYY
     const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
     
     const newSchedule = {
@@ -60,21 +59,16 @@ function ScheduleScreen() {
     
     setSchedules([...schedules, newSchedule]);
   };
-
-  // A simple function to increment the date by one day
   const incrementDate = () => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + 1);
     setDate(newDate);
   };
-
-  // A simple function to decrement the date by one day
   const decrementDate = () => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() - 1);
     setDate(newDate);
   };
-
   return (
     <View style={styles.container}>
       <Text>Schedule Screen</Text>

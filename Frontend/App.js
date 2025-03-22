@@ -9,6 +9,7 @@ import ScheduleDetailScreen from "./screens/ScheduleDetailScreen";
 import LoginScreen from './screens/LoginScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
 import FitnessAnalysis from './screens/FitnessAnalysis';
+import setup, { singup } from './screens/setup';
 
 const Stack = createStackNavigator();
 
@@ -19,14 +20,18 @@ export default function App() {
 			<StatusBar style="auto" />
 			<NavigationContainer>
 				<Stack.Navigator
-			
+
 				>
 					{!isAuth ? (
+						<>
+						<Stack.Screen name="Register" component={setup}tions={{headerShown : false}}/>
 						<Stack.Screen
 						name = "Login"
 						component={FitnessAnalysis}
 						options={{ headerShown: false }}
-						/> ) : (
+						/>
+						</>
+						) : (
 						<Stack.Screen
 							name="BottomNavigation"
 							component={BottomNavigation}
@@ -35,9 +40,9 @@ export default function App() {
 							}}
 						/>
 					)}
-					
+
 				</Stack.Navigator>
-				
+
 			</NavigationContainer>
 		</>
 	);

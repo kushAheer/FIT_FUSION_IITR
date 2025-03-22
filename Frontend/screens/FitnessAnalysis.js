@@ -147,26 +147,6 @@ const FitnessActivity = () => {
 				)}
 			/>
 
-			{/* Bottom Navigation */}
-			{/* <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <Image source={require('./assets/home-icon.png')} style={styles.navIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Image source={require('./assets/search-icon.png')} style={styles.navIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <View style={styles.addButton}>
-            <Text style={styles.addButtonText}>+</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Image source={require('./assets/heart-icon.png')} style={styles.navIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.workoutNavText}>Workout</Text>
-        </TouchableOpacity>
-      </View> */}
 		</SafeAreaView>
 	);
 };
