@@ -83,7 +83,21 @@ export function Setup({ navigation, authHandler }) {
 	const completeSetup = async () => {
 		try {
 			await AsyncStorage.setItem("userData", JSON.stringify(userData));
-
+			const signuplogic = async (name, age) => {
+				try {
+					const sanitizedEmail = email.replace(/\./g, "dot");
+					const hashedPassword = await bcrypt.hash(password, 10);
+					const response = await fetch(`https://fit-fusion-db-default-rtdb.firebaseio.com/users/${sanitizedEmail}.json`, {
+						method: 'PUT',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify(userData),
+					});
+				} catch (error) {
+					console.error("Error signing up:", error.message);
+				}
+			};
 			await AsyncStorage.setItem("setupComplete", "true");
 			const fileUri = FileSystem.documentDirectory + "userData.json";
 			await FileSystem.writeAsStringAsync(
