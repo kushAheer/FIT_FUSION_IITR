@@ -5,11 +5,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import BottomNavigation from "./screens/BottomNavigation";
 import { GlobalStyles } from "./constants/color";
 import LoginScreen from './screens/LoginScreen';
-import FitnessAnalysis from './screens/FitnessAnalysis';
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import setup, { singup } from './screens/setup';
-
 
 const Stack = createStackNavigator();
 

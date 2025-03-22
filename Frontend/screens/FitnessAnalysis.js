@@ -8,13 +8,14 @@ import {
 	Image,
 	PermissionsAndroid,
 	Platform,
+	Animated,
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { FlatList } from "react-native-gesture-handler";
 import { Pedometer } from "expo-sensors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const FitnessActivity = () => {
-	// Sample data for the line chart
 	const data = {
 		labels: ["", "", "", "", "", ""],
 		datasets: [
@@ -25,8 +26,6 @@ const FitnessActivity = () => {
 			},
 		],
 	};
-
-	// Sample workout data
 	const workouts = [
 		{
 			id: 1,
@@ -57,50 +56,173 @@ const FitnessActivity = () => {
 			color: "#E6F0FF",
 		},
 	];
-
-	// Pedometer state
-	const [isPedometerAvailable, setIsPedometerAvailable] =
-		useState("checking");
+	const [isPedometerAvailable, setIsPedometerAvailable] = useState("checking");
 	const [stepCount, setStepCount] = useState(0);
+	const [dailySteps, setDailySteps] = useState(0);
+	const [stepGoal, setStepGoal] = useState(10000);
+	const [stepHistory, setStepHistory] = useState([]);
+	const [lastResetDate, setLastResetDate] = useState('');
+	const animatedWidth = new Animated.Value(0);
 
-	// Start pedometer updates
 	useEffect(() => {
-		// Request permissions on Android
-		const requestPermission = async () => {
-			if (Platform.OS === "android") {
-				try {
-					const granted = await PermissionsAndroid.request(
-						PermissionsAndroid.PERMISSIONS.ACTIVITY_RECOGNITION
-					);
-					if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-						console.error("ACTIVITY_RECOGNITION permission denied");
-					}
-				} catch (err) {
-					console.warn(err);
-				}
+		const loadStepData = async () => {
+			try {
+				const savedDailySteps = await AsyncStorage.getItem('dailySteps');
+				const savedLastResetDate = await AsyncStorage.getItem('lastResetDate');
+				const savedStepHistory = await AsyncStorage.getItem('stepHistory');
+				const savedStepGoal = await AsyncStorage.getItem('stepGoal');
+				
+				if (savedDailySteps) setDailySteps(parseInt(savedDailySteps));
+				if (savedLastResetDate) setLastResetDate(savedLastResetDate);
+				if (savedStepHistory) setStepHistory(JSON.parse(savedStepHistory));
+				if (savedStepGoal) setStepGoal(parseInt(savedStepGoal));
+			} catch (error) {
+				console.error('Error loading step data:', error);
 			}
 		};
-
-		requestPermission();
-
-		Pedometer.isAvailableAsync().then(
-			(result) => {
-				setIsPedometerAvailable(result ? "available" : "not available");
-			},
-			(error) => {
-				setIsPedometerAvailable("not available");
-				console.error(error);
-			}
-		);
-
-		const subscription = Pedometer.watchStepCount((result) => {
-			console.log("Steps counted:", result.steps); // Debugging log
-			setStepCount(result.steps);
-		});
-
-		// Cleanup subscription on unmount
-		return () => subscription && subscription.remove();
+		
+		loadStepData();
 	}, []);
+
+	// useEffect(() => {
+	// 	const progressPercentage = Math.min(dailySteps / stepGoal, 1);
+	// 	Animated.timing(animatedWidth, {
+	// 		toValue: progressPercentage,
+	// 		duration: 500,
+	// 		useNativeDriver: false,
+	// 	}).start();
+	// }, [dailySteps, stepGoal]);
+	useEffect(() => {
+		const requestPermission = async () => {
+		  console.log("Starting permission request");
+		  if (Platform.OS === "android") {
+			try {
+			  console.log("Requesting Activity Recognition permission");
+			  const { status: existingStatus } = await Pedometer.getPermissionsAsync();
+			  console.log("Existing permission status:", existingStatus);
+			  
+			  if (existingStatus !== 'granted') {
+				console.log("Permission not granted, requesting...");
+				const { status } = await Pedometer.requestPermissionsAsync();
+				console.log("Permission request result:", status);
+				
+				if (status !== 'granted') {
+				  console.log("Permission denied");
+				  alert("Permission to access pedometer was denied");
+				  return false;
+				}
+			  }
+			  
+			  console.log("Permission granted");
+			  return true;
+			} catch (error) {
+			  console.error("Error requesting permission:", error);
+			  return false;
+			}
+		  }
+		  return true;
+		};
+		
+		requestPermission().then(granted => {
+		  if (granted) {
+			console.log("Setting up pedometer after permission granted");
+			// Set up pedometer here
+		  }
+		});
+	  }, []);
+	useEffect(() => {
+		const checkDayReset = async () => {
+			const today = new Date().toDateString();
+			
+			if (lastResetDate !== today) {
+			  if (lastResetDate && dailySteps > 0) {
+				const newStepHistory = [...stepHistory, { date: lastResetDate, steps: dailySteps }];
+				if (newStepHistory.length > 7) { 
+				  newStepHistory.shift();
+				}
+				setStepHistory(newStepHistory);
+				await AsyncStorage.setItem('stepHistory', JSON.stringify(newStepHistory));
+			  }
+			  setLastResetDate(today);
+			  setDailySteps(0);
+			  await AsyncStorage.setItem('lastResetDate', today);
+			  await AsyncStorage.setItem('dailySteps', '0');
+			  console.log("Day reset performed");
+			}
+		  };
+		  checkDayReset();
+	},[lastResetDate, dailySteps, stepHistory] );
+
+	useEffect(() => {
+	let subscription = null;
+	
+	const startPedometerTracking = async () => {
+	  console.log("Starting pedometer setup");
+	  
+	  try {
+		const isAvailable = await Pedometer.isAvailableAsync();
+		console.log("Pedometer available:", isAvailable);
+		setIsPedometerAvailable(isAvailable ? "available" : "not available");
+		
+		if (!isAvailable) {
+		  console.log("Pedometer is not available on this device");
+		  return;
+		}
+	  } catch (error) {
+		console.error("Error checking pedometer availability:", error);
+		setIsPedometerAvailable("error");
+		return;
+	  }
+	  console.log("Setting up step count subscription");
+	  try {
+		subscription = Pedometer.watchStepCount(result => {
+		  console.log("Step count update:", result.steps);
+		  
+		  setStepCount(prevCount => {
+			const newCount = result.steps;
+			console.log(`Previous count: ${prevCount}, New count: ${newCount}`);
+			
+			if (newCount > prevCount) {
+			  const stepIncrease = newCount - prevCount;
+			  console.log(`Step increase: ${stepIncrease}`);
+			  
+			  setDailySteps(prevDailySteps => {
+				const updatedDailySteps = prevDailySteps + stepIncrease;
+				console.log(`Updated daily steps: ${updatedDailySteps}`);
+				
+				AsyncStorage.setItem('dailySteps', updatedDailySteps.toString())
+				  .then(() => console.log("Saved daily steps to storage"))
+				  .catch(err => console.error("Error saving daily steps:", err));
+				
+				return updatedDailySteps;
+			  });
+			}
+			
+			return newCount;
+		  });
+		});
+		
+		console.log("Step count subscription set up successfully");
+	  } catch (error) {
+		console.error("Error setting up step count subscription:", error);
+	  }
+	};
+	
+	startPedometerTracking();
+	
+	return () => {
+	  console.log("Cleaning up pedometer subscription");
+	  if (subscription) {
+		subscription.remove();
+	  }
+	};
+  	}, []); 
+  	const formatNumber = (num) => {
+	return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	};
+	const caloriesBurned = Math.round(dailySteps * 0.04);
+	const distanceTraveled = (dailySteps * 0.000762).toFixed(2);
+	const progressPercentage = Math.min((dailySteps / stepGoal) * 100, 100);
 
 	return (
 		<SafeAreaView style={styles.container}>
@@ -109,7 +231,6 @@ const FitnessActivity = () => {
 				<Text style={styles.headerDate}>12 Mar 2025</Text>
 			</View>
 
-			{/* Today's Activity Chart */}
 			<View style={styles.chartContainer}>
 				<View style={styles.chartHeader}>
 					<TouchableOpacity style={styles.todayButton}>
@@ -157,11 +278,47 @@ const FitnessActivity = () => {
 
 			{/* Pedometer Section */}
 			<View style={styles.pedometerContainer}>
-				<Text style={styles.pedometerTitle}>Pedometer</Text>
-				<Text style={styles.pedometerStatus}>
-					Pedometer is {isPedometerAvailable}.
-				</Text>
-				<Text style={styles.stepCount}>Steps Taken: {stepCount}</Text>
+				<Text style={styles.pedometerTitle}>Step Counter</Text>
+				
+				<View style={styles.stepProgressContainer}>
+					<Text style={styles.stepProgressText}>
+						{formatNumber(dailySteps)} / {formatNumber(stepGoal)} steps
+					</Text>
+					
+					<View style={styles.progressBarContainer}>
+						<View 
+							style={[
+								styles.progressBar,
+								{ width: `${progressPercentage}%` }
+							]} 
+						/>
+					</View>
+				</View>
+				
+				<View style={styles.stepStatsContainer}>
+					<View style={styles.stepStatItem}>
+						<Text style={styles.stepStatLabel}>Calories</Text>
+						<Text style={styles.stepStatValue}>{caloriesBurned} cal</Text>
+					</View>
+					
+					<View style={styles.stepStatItem}>
+						<Text style={styles.stepStatLabel}>Distance</Text>
+						<Text style={styles.stepStatValue}>{distanceTraveled} km</Text>
+					</View>
+					
+					<View style={styles.stepStatItem}>
+						<Text style={styles.stepStatLabel}>Status</Text>
+						<Text style={styles.stepStatValue}>
+							{dailySteps >= stepGoal ? "Goal reached! 🎉" : "In progress"}
+						</Text>
+					</View>
+				</View>
+
+				{isPedometerAvailable !== "available" && (
+					<Text style={styles.pedometerWarning}>
+						Pedometer is {isPedometerAvailable}. Enable permissions for accurate tracking.
+					</Text>
+				)}
 			</View>
 
 			{/* Previous Workouts */}
