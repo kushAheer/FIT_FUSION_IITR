@@ -86,7 +86,7 @@ export function setup({ navigation }) {
       const fileUri = FileSystem.documentDirectory + 'userData.json';
       await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(userData));
       console.log("User data saved to file:", fileUri);
-      navigation.navigate("BottomNavigation");
+      navigation.navigate("Login");
     }
     catch (error) {
       console.error("Error saving user data", error);

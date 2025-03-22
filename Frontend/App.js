@@ -24,15 +24,13 @@ export default function App() {
 		<>
 			<StatusBar style="auto" />
 			<NavigationContainer>
-				<Stack.Navigator
-
-				>
+				<Stack.Navigator>
 					{!isAuth ? (
 						<>
-							<Stack.Screen name="Register" component={setup} tions={{ headerShown: false }} />
+							<Stack.Screen name="Register" component={setup} options={{ headerShown: false }} />
 							<Stack.Screen
 								name="Login"
-								component={FitnessAnalysis}
+								component={BottomNavigation}
 								options={{ headerShown: false }}
 							/>
 						</>
