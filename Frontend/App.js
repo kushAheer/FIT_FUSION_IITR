@@ -8,6 +8,7 @@ import LoginScreen from './screens/LoginScreen';
 import FitnessAnalysis from './screens/FitnessAnalysis';
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import setup, { singup } from './screens/setup';
 
 const Stack = createStackNavigator();
 
@@ -22,21 +23,23 @@ export default function App() {
 		<>
 			<StatusBar style="auto" />
 			<NavigationContainer>
-				<Stack.Navigator initialRouteName={!isAuth ? "Login" : "BottomNavigation"}>
 					{!isAuth ? (
+						<>
+						<Stack.Screen name="Register" component={setup}tions={{headerShown : false}}/>
 						<Stack.Screen
 							name="Login"
 							options={{ headerShown: false }}
 							children={(props) => <LoginScreen {...props} authHandler={authHandler} />} // Pass authHandler
 						/>
-					) : (
+						</>
+
+						) : (
 						<Stack.Screen
 							name="BottomNavigation"
 							options={{ headerShown: false }}
 							children={(props) => <BottomNavigation {...props} authHandler={authHandler} />} // Pass authHandler
 						/>
 					)}
-				</Stack.Navigator>
 			</NavigationContainer>
 		</>
 	);

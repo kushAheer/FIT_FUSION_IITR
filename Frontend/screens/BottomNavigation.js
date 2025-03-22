@@ -6,7 +6,7 @@ import NutritionScreen from "./NutritionScreen";
 import HomeScreen from "./HomeScreen";
 import ScheduleScreen from "./ScheduleScreen";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { ScheduleNestedNavigation } from "./StackNestedNavigation";
+import { NutritionNestedNavigation, ScheduleNestedNavigation } from "./StackNestedNavigation";
 import FitnessActivity from "./FitnessAnalysis";
 import FitnessSocialApp from "./SocialScreen";
 
@@ -68,7 +68,7 @@ function BottomNavigation() {
 			/>
 			<Tab.Screen
 				name="Nutrition"
-				component={NutritionScreen}
+				component={NutritionNestedNavigation}
 				options={() => ({
 					tabBarLabel: "Nutrition",
 					tabBarIcon: ({ color }) => (
@@ -80,7 +80,7 @@ function BottomNavigation() {
 				name="Analytics"
 				component={FitnessActivity}
 				options={() => ({
-					tabBarLabel: "Workout",
+					tabBarLabel: "Analytics",
 					tabBarIcon: ({ color }) => (
 						// <Icon source="chart-bar" color={color} size={26} />
 						<Ionicons name="trending-up" color={color} size={26} />
