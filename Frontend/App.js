@@ -4,19 +4,20 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import BottomNavigation from "./screens/BottomNavigation";
 import { GlobalStyles } from "./constants/color";
-import LoginScreen from './screens/LoginScreen';
-import React, { useState, useEffect } from 'react';
+import LoginScreen from "./screens/LoginScreen";
+import FitnessAnalysis from "./screens/FitnessAnalysis";
+import React, { useState, useEffect } from "react";
+import SetUp from "./screens/SetUp";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import setup, { singup } from './screens/setup';
+
 
 const Stack = createStackNavigator();
 
 export default function App() {
-
-	const [isAuth , setIsAuth] = useState(false)
-	const loginHandler = ()=>{
-		setIsAuth((prev)=>!prev)
-	}
+	const [isAuth, setIsAuth] = useState(false);
+	const loginHandler = () => {
+		setIsAuth((prev) => !prev);
+	};
 	return (
 		<>
 			<StatusBar style="auto" />
@@ -24,10 +25,24 @@ export default function App() {
 				<Stack.Navigator>
 					{!isAuth ? (
 						<>
-							<Stack.Screen name="Register" component={setup} options={{ headerShown: false }} />
+							<Stack.Screen
+								name="Register"
+								options={{ headerShown: false }}
+								children={(props) => (
+									<SetUp
+										{...props}
+										authHandler={loginHandler}
+									/>
+								)}
+							/>
 							<Stack.Screen
 								name="Login"
-								component={BottomNavigation}
+								children={(props) => (
+									<LoginScreen
+										{...props}
+										authHandler={loginHandler}
+									/>
+								)}
 								options={{ headerShown: false }}
 							/>
 						</>
@@ -35,10 +50,15 @@ export default function App() {
 						<Stack.Screen
 							name="BottomNavigation"
 							options={{ headerShown: false }}
-							children={(props) => <BottomNavigation {...props} authHandler={authHandler} />} // Pass authHandler
+							children={(props) => (
+								<BottomNavigation
+									{...props}
+									authHandler={loginHandler}
+								/>
+							)} // Pass authHandler
 						/>
 					)}
-					</Stack.Navigator>
+				</Stack.Navigator>
 			</NavigationContainer>
 		</>
 	);

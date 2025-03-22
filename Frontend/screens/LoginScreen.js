@@ -14,7 +14,7 @@ const LoginScreen = ({ authHandler}) => {
     const [password, setPassword] = useState('');
     const navigation = useNavigation();
     const handlePress= ()=>{
-		navigation.navigate('setup');
+		        navigation.navigate('Register');
 	}
     const loginlogic = async () => {
         try {
@@ -31,7 +31,7 @@ const LoginScreen = ({ authHandler}) => {
                 return;
             }
             alert(`Welcome back, ${userData.name}!`);
-            navigation.navigate('HomeScreen');
+            authHandler();
         } catch (error) {
             console.error("Error logging in:", error.message);
             alert("An error occurred during login.");
