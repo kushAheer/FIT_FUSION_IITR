@@ -7,49 +7,108 @@ import { GlobalStyles } from "../constants/color";
 
 const LoginScreen = () => {
     const [email, setEmail] = useState('');
-    const [password, confirmpassword] = useState('');
+    const [password, setPassword] = useState('');
     const navigation = useNavigation();
- 
-    const loginlogic = () => {        // once decided how we will handle multiple usernames it will be added 
 
-        //logic of login will be here this is temp for some time to return back to
-        navigation.navigate('HomeScreen');
+    const loginlogic = async () => {
+        try {
+            // Replace '.' with 'dot' in email for Firebase key compatibility
+            const sanitizedEmail = email.replace(/\./g, "dot");
+
+            // Fetch user data from Firebase
+            const response = await fetch(`https://fit-fusion-db-default-rtdb.firebaseio.com/users/${sanitizedEmail}.json`);
+            const userData = await response.json();
+
+            if (!userData) {
+                alert("User not found!");
+                return;
+            }
+
+            // Validate password
+            const isPasswordValid = await bcrypt.compare(password, userData.password);
+            if (!isPasswordValid) {
+                alert("Invalid password!");
+                return;
+            }
+
+            alert(`Welcome back, ${userData.name}!`);
+            navigation.navigate('HomeScreen');
+        } catch (error) {
+            console.error("Error logging in:", error.message);
+            alert("An error occurred during login.");
+        }
     };
+
+    const signuplogic = async (name, age) => {
+        try {
+            // Replace '.' with 'dot' in email for Firebase key compatibility
+            const sanitizedEmail = email.replace(/\./g, "dot");
+
+            // Hash the password using bcrypt
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            // Create a new user in Firebase
+            const response = await fetch(`https://fit-fusion-db-default-rtdb.firebaseio.com/users/${sanitizedEmail}.json`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    age: age,
+                    password: hashedPassword,
+                }),
+            });
+
+            if (response.ok) {
+                alert("User signed up successfully!");
+                navigation.navigate('HomeScreen');
+            } else {
+                alert("Failed to sign up. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error signing up:", error.message);
+            alert("An error occurred during signup.");
+        }
+    };
+
     return (
-        <View style = {styles.container}>
+        <View style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor="#fff" />
             <TouchableOpacity
                 style={styles.backButton}
-                onPress={()=> navigation.goback()}
+                onPress={() => navigation.goBack()}
             >
-                <Icon name = "arrow-back" size={24} color = '#000'  />
+                <Icon name="arrow-back" size={24} color="#000" />
             </TouchableOpacity>
             <View style={styles.content}>
                 <Text style={styles.loginHeader}>Login</Text>
                 <TextInput
-                    style = {styles.input}
-                    label = "Enter Email or Username"
-                    usernametextcolor = "#888"
+                    style={styles.input}
+                    label="Enter Email or Username"
                     autoCapitalize="none"
                     value={email}
                     onChangeText={setEmail}
                 />
                 <TextInput
-                    style = {styles.input}
-                    pass = "password"
-                    passte0xtcolor="#888"
+                    style={styles.input}
+                    label="Enter Password"
                     secureTextEntry
                     value={password}
-                    onChangeText={confirmpassword}
-                /> 
+                    onChangeText={setPassword}
+                />
                 <View style={styles.forgotpasscontainer}>
                     <Text style={styles.forgotpasstext}>Forgot Password</Text>
-                    <TouchableOpacity onPress={()=> navigation.navigate("forgot password")}>
-                        <Text style= {styles.forgotpasslink}>Forgot Password?</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("forgot password")}>
+                        <Text style={styles.forgotpasslink}>Forgot Password?</Text>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity>
-                    <Text style = {styles.loginBotton}>LOGIN</Text>
+                <TouchableOpacity onPress={loginlogic}>
+                    <Text style={styles.loginBotton}>LOGIN</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => signuplogic("John Doe", 25)}>
+                    <Text style={styles.loginBotton}>SIGNUP</Text>
                 </TouchableOpacity>
             </View>
         </View>
