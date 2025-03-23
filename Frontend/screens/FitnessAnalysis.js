@@ -126,7 +126,6 @@ const FitnessActivity = () => {
 		requestPermission().then(granted => {
 		  if (granted) {
 			console.log("Setting up pedometer after permission granted");
-			// Set up pedometer here
 		  }
 		});
 	  }, []);
@@ -276,50 +275,7 @@ const FitnessActivity = () => {
 				</View>
 			</View>
 
-			{/* Pedometer Section */}
-			<View style={styles.pedometerContainer}>
-				<Text style={styles.pedometerTitle}>Step Counter</Text>
-				
-				<View style={styles.stepProgressContainer}>
-					<Text style={styles.stepProgressText}>
-						{formatNumber(dailySteps)} / {formatNumber(stepGoal)} steps
-					</Text>
-					
-					<View style={styles.progressBarContainer}>
-						<View 
-							style={[
-								styles.progressBar,
-								{ width: `${progressPercentage}%` }
-							]} 
-						/>
-					</View>
-				</View>
-				
-				<View style={styles.stepStatsContainer}>
-					<View style={styles.stepStatItem}>
-						<Text style={styles.stepStatLabel}>Calories</Text>
-						<Text style={styles.stepStatValue}>{caloriesBurned} cal</Text>
-					</View>
-					
-					<View style={styles.stepStatItem}>
-						<Text style={styles.stepStatLabel}>Distance</Text>
-						<Text style={styles.stepStatValue}>{distanceTraveled} km</Text>
-					</View>
-					
-					<View style={styles.stepStatItem}>
-						<Text style={styles.stepStatLabel}>Status</Text>
-						<Text style={styles.stepStatValue}>
-							{dailySteps >= stepGoal ? "Goal reached! 🎉" : "In progress"}
-						</Text>
-					</View>
-				</View>
-
-				{isPedometerAvailable !== "available" && (
-					<Text style={styles.pedometerWarning}>
-						Pedometer is {isPedometerAvailable}. Enable permissions for accurate tracking.
-					</Text>
-				)}
-			</View>
+			
 
 			{/* Previous Workouts */}
 			<FlatList
@@ -332,6 +288,50 @@ const FitnessActivity = () => {
 							{ backgroundColor: workout.item.color },
 						]}
 					>
+						{/* Pedometer Section */}
+						<View style={styles.pedometerContainer}>
+							<Text style={styles.pedometerTitle}>Step Counter</Text>
+				
+							<View style={styles.stepProgressContainer}>
+								<Text style={styles.stepProgressText}>
+									{formatNumber(dailySteps)} / {formatNumber(stepGoal)} steps
+								</Text>
+					
+								<View style={styles.progressBarContainer}>
+									<View 
+										style={[
+											styles.progressBar,
+											{ width: `${progressPercentage}%` }
+										]} 
+									/>
+								</View>
+							</View>
+				
+							<View style={styles.stepStatsContainer}>
+								<View style={styles.stepStatItem}>
+									<Text style={styles.stepStatLabel}>Calories</Text>
+									<Text style={styles.stepStatValue}>{caloriesBurned} cal</Text>
+								</View>
+					
+								<View style={styles.stepStatItem}>
+									<Text style={styles.stepStatLabel}>Distance</Text>
+									<Text style={styles.stepStatValue}>{distanceTraveled} km</Text>
+								</View>
+					
+								<View style={styles.stepStatItem}>
+									<Text style={styles.stepStatLabel}>Status</Text>
+									<Text style={styles.stepStatValue}>
+										{dailySteps >= stepGoal ? "Goal reached! 🎉" : "In progress"}
+									</Text>
+								</View>
+							</View>
+
+							{isPedometerAvailable !== "available" && (
+								<Text style={styles.pedometerWarning}>
+									Pedometer is {isPedometerAvailable}. Enable permissions for accurate tracking.
+								</Text>
+							)}
+						</View>
 						<View style={styles.workoutInfo}>
 							<View style={styles.workoutType}>
 								<Text style={styles.workoutText}>Running</Text>

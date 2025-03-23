@@ -79,7 +79,7 @@ const HomeScreen = ({navigation}) => {
 
 				<View style={styles.progressSection}>
 					<Text style={styles.progressLabel}>Steps</Text>
-					<Text style={styles.progressValue}>10240/15000 gm</Text>
+					<Text style={styles.progressValue}>10240/15000 m</Text>
 				</View>
 				<View style={styles.progressBar}>
 					<View style={[styles.progressFill, { width: "68%" }]} />

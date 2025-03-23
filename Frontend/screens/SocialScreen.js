@@ -6,11 +6,11 @@ const FitnessSocialApp = () => {
   // Sample data
   const circleProfiles = [
     { id: 1, image: require('../assets/profile.jpg') },
-    { id: 2, image: require('../assets/profile.jpg') },
-    { id: 3, image: require('../assets/profile.jpg') },
-    { id: 4, image: require('../assets/profile.jpg') },
+    { id: 2, image: require('../assets/profile1.webp') },
+    { id: 3, image: require('../assets/profile2.webp') },
+    { id: 4, image: require('../assets/profile3.webp') },
     { id: 5, image: require('../assets/profile.jpg') },
-    { id: 6, image: require('../assets/profile.jpg') },
+    { id: 6, image: require('../assets/profile1.webp') },
   ];
 
   return (
