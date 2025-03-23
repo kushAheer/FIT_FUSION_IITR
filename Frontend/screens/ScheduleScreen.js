@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Image,
   TextInput,
   Modal,
 } from "react-native";
@@ -121,7 +122,7 @@ function ScheduleScreen() {
               </TouchableOpacity>
               {schedule.showQR && (
                 <View style={styles.qrContainer}>
-                  <Text style={styles.qrPlaceholder}>QR Code Placeholder</Text>
+                  <Image source={require("../assets/qrpng.webp")} />
                 </View>
               )}
             </View>

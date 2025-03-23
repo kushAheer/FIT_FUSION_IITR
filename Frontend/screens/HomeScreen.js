@@ -17,6 +17,9 @@ const HomeScreen = ({navigation}) => {
 	const handlePress= ()=>{
 		navigation.navigate('Schedule');
 	}
+	const handlePress1= ()=>{
+		navigation.navigate('FitnessAnalysis');
+	}
 
 
 	return (
@@ -135,7 +138,10 @@ const HomeScreen = ({navigation}) => {
 					<Text style={styles.sectionTitle}>
 						Latest from your circle
 					</Text>
-					<TouchableOpacity>
+					<TouchableOpacity
+						style={styles.editButton}
+						onPress={handlePress1}
+					>
 						<Text style={styles.viewAllText}>View More</Text>
 					</TouchableOpacity>
 				</View>

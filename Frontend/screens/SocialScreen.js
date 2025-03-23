@@ -54,6 +54,7 @@ const FitnessSocialApp = () => {
 
           {/* Post Image */}
           <Image source={require('../assets/profile.jpg')} style={styles.postImage} />
+          
 
           {/* Post Actions */}
           <View style={styles.postActions}>
